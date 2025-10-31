@@ -5,9 +5,9 @@ const { verifyToken } = require('../middleware/verifytoken');
 const route = express.Router();
 
 //  Get all tasks 
-route.get('/', async (req, res) => {
+route.get('/', verifyToken, async (req, res) => {
   try {
-    const tasks = await Task.find().populate('user');
+    const tasks = await Task.find({ user: req.user._id }).populate('user');
     res.status(200).json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message || "Server error" });
